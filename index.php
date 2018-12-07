@@ -2,7 +2,8 @@
 
 //Подключение файлов системы
 define('ROOT', dirname(__FILE__));
-require_once (ROOT.'/components/Autoload.php');?>
+require_once (ROOT.'/components/Autoload.php');
+?>
 
 <!doctype html>
 <html lang="en">
@@ -22,14 +23,14 @@ require_once (ROOT.'/components/Autoload.php');?>
 
 
 <body class="text-center">
-    <form class="form-signin" role="form" method="POST" action="entry">
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <form class="form-signin" role="form" method="post" action="controllers/FormController.php">
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label for="inputLogin" class="sr-only">Login</label>
-        <input type="email" id="inputLogin" class="form-control" placeholder="James Bond" required autofocus>
+        <input type="text" id="inputLogin" class="form-control" placeholder="James Bond" name="inputLogin" autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="inputPassword">
         <button class="btn btn-lg btn-primary btn-block" type="submit" name="sign_in">Enter</button>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" name="is_auth">Is auth</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" name="is_auth">Is auth</button>
         <button class="btn btn-lg btn-primary btn-block" type="submit" name="logout">Logout</button>
     </form>
 
