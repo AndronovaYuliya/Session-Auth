@@ -7,7 +7,7 @@
 
     function __autoload($className)
     {
-        $paths=['/models/','/controllers/'];
+        $paths=['/models/'];
 
         foreach ($paths as $path)
         {
