@@ -1,8 +1,70 @@
 <?php
-
 //Подключение файлов системы
 define('ROOT', dirname(__FILE__));
-require_once (ROOT.'/components/Autoload.php');
+include_once (ROOT.'/components/Autoload.php');
+
+if ($_SERVER['REQUEST_METHOD']=='POST')
+{
+    $errors=false;
+    $msg='';
+    //авторизация
+    if (isset($_POST['sign_in']))
+    {
+        $userId=false;
+        $login=$_POST['inputLogin'];
+        $password=$_POST['inputPassword'];
+        //Валидация логина
+        if(!Authorization::checkLogin($login))
+        {
+            $errors[]='Enter a valid username';
+        }
+        //Валидация пароля
+        if(!Authorization::checkPass($password))
+        {
+            $errors[]='Enter the correct password';
+        }
+
+        //проверка существования пользователя
+        $userId=Authorization::login($login, $password);
+        if($userId)
+        {
+            $msg='Hola '.Authorization::getLogin().'!';
+        }
+        else
+        {
+            $errors[]='Wrong login or password';
+        }
+    }
+
+    //проверка на авторизацию
+    if (isset($_POST['is_auth']))
+    {
+        if(Authorization::isAuth())
+        {
+            $msg='You are logged in!';
+        }
+        else
+        {
+            Authorization::logout();
+            $errors[]='You are not logged in';
+        }
+    }
+
+    //logout
+    if(isset($_POST['logout']))
+    {
+        if(Authorization::isAuth())
+        {
+            Authorization::logout();
+            $errors[]='See you later!';
+        }
+        else
+        {
+            Authorization::logout();
+            $errors[]='You are not logged in';
+        }
+    }
+}
 ?>
 
 <!doctype html>
@@ -18,17 +80,26 @@ require_once (ROOT.'/components/Autoload.php');
     <!-- Custom styles for this template -->
     <link href="css/signin.css" rel="stylesheet">
 
-    <title>Shop</title>
+    <title>AndronovaShop</title>
 </head>
 
 
 <body class="text-center">
-    <form class="form-signin" role="form" method="post" action="controllers/FormController.php">
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+
+    <form class="form-signin" role="form" method="post">
+        <?php if(isset($msg)) echo $msg;?>
+        <table>
+            <?php foreach($errors as $key=>$value): ?>
+                <tr>
+                    <td><?php echo $value; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label for="inputLogin" class="sr-only">Login</label>
-        <input type="text" id="inputLogin" class="form-control" placeholder="James Bond" name="inputLogin" autofocus>
+        <input type="text" id="inputLogin" class="form-control" placeholder="James Bond" name="inputLogin" value="<?php echo $_POST['inputLogin']?>" autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="inputPassword">
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="inputPassword" value="">
         <button class="btn btn-lg btn-primary btn-block" type="submit" name="sign_in">Enter</button>
             <button class="btn btn-lg btn-primary btn-block" type="submit" name="is_auth">Is auth</button>
         <button class="btn btn-lg btn-primary btn-block" type="submit" name="logout">Logout</button>
