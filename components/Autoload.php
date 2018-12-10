@@ -5,17 +5,10 @@
      *
      */
 
-    function __autoload($className)
-    {
-        $paths=['/models/'];
+function myAutoload($classname){
+    $filename=ROOT.'/models/'.$classname.'.php';
+    include_once $filename;
+}
 
-        foreach ($paths as $path)
-        {
-            $path=ROOT.$path.$className.'.php';
-
-            if(is_file($path))
-            {
-                require_once $path;
-            }
-        }
-    }
+//регистрируем загрузчик
+spl_autoload_register('myAutoload');
